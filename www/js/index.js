@@ -32,7 +32,6 @@ const milestoneImageMap = {};
 const milestoneSound = {};
 let reached = {};
 
-// TODO: move to gitlab so i can use git lens
 // TODO (have tentative): game app icon: castle lite / glasses with bolt (probably better with castle)
 // TODO：game start animation: owl coming with admission letter
 // TODO: success animations: purple bus coming or something more tied to success， note:* for the purple bus milestone, better integrete Sirius
