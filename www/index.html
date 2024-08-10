@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, please refer to the docs:
+            https://cordova.apache.org/docs/en/latest/
+        Some notes:
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+        <meta name="color-scheme" content="light dark">
+        <link rel="stylesheet" href="css/index.css">
+        <title>Magic 2048</title>
+    </head>
+    <body>
+        <!-- Elements -->
+        <div id="welcome-screen">
+            <div id="welcome-title">Welcome to Your Magical 2048</div>
+            <button id="start-button">Start New Game</button>
+        </div>
+        <div id="game-select" style="display:none">
+            <button id="mode_4">4 X 4</button>
+            <button id="mode_5">5 X 5</button>
+            <button id="mode_6">6 X 6</button>
+        </div>
+        <div id="game-screen" style="display:none">
+            <div id="game-container"></div>
+            <div id="game-buttons">
+                <button id="back-to-select">Back</button>
+                <button id="restart-button">Restart</button>
+            </div>
+        </div>
+        <div id="success-message">Congratualations Wizard! You Won!</div>
+        <div id="game-over">Game Over</div>
+        <!-- Audios -->
+        
+        <audio id="background-music" loop>
+            <!-- TODO: FIX this name, this background music is working， but should we find a more mild version? -->
+            <source src="audio/HarryPotterPrologue-soft.mp3" type="audio/mp3"> 
+        </audio>
+        <audio id="milestone-sound-8">
+            <source src="audio/milestone-8-gryffindor.mp3" type="audio/mp3">
+        </audio>
+        <audio id="milestone-sound-16">
+            <source src="audio/milestone-16-quidditch-player.mp3" type="audio/mp3">
+        </audio>
+        <audio id="milestone-sound-32">
+            <source src="audio/milestone-32-checkmate.mp3" type="audio/mp3">
+        </audio>
+        <audio id="milestone-sound-64">
+            <source src="audio/milestone-64-patronus.mp3" type="audio/mp3">
+        </audio>
+        <audio id="milestone-sound-128">
+            <source src="audio/milestone-128-name-in-cup.mp3" type="audio/mp3">
+        </audio>
+        <audio id="milestone-sound-256">
+            <source src="audio/milestone-256-fight.mp3" type="audio/mp3">
+        </audio>
+        <audio id="milestone-sound-512">
+            <source src="audio/milestone-512-chosen-one.mp3" type="audio/mp3">
+        </audio>
+        <audio id="milestone-sound-1024">
+            <source src="audio/milestone-1024-risk-their-lives.mp3" type="audio/mp3">
+        </audio>
+        <audio id="milestone-sound-2048">
+            <source src="audio/milestone-2048-cheering.mp3" type="audio/mp3">
+        </audio>
+        <!-- Script -->
+        <script src="cordova.js"></script>
+        <script src="js/index.js"></script>
+    </body>
+</html>
