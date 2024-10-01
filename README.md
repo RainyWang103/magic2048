@@ -8,6 +8,8 @@ Pre-requisite is cordova: https://cordova.apache.org/docs/en/12.x/guide/cli/
 ## Run
 open www -> index.html
 
+game logo configured in config.xml
+
 
 ## Build
 ### Add android platform 
