@@ -8,6 +8,59 @@ body {
     font-family: 'Arial', sans-serif; 
 }
 /* =============================*/
+/* Password Screen */
+/* =============================*/
+#password-screen {
+    width: 320px;
+    text-align: center;
+    animation: fadeIn 1s forwards;
+}
+#password-title {
+    font-size: 32px;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+#password-subtitle {
+    font-size: 15px;
+    color: #9cb0b6;
+    margin-bottom: 28px;
+}
+#password-input {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 5px;
+    background-color: #47628f;
+    color: #fff;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+    text-align: center;
+    letter-spacing: 3px;
+    outline: none;
+}
+#password-input::placeholder {
+    color: #9cb0b6;
+    letter-spacing: normal;
+}
+#password-submit {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1em;
+    background-color: #374e73;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#password-error {
+    margin-top: 14px;
+    color: #e57373;
+    font-size: 0.9em;
+    display: none;
+}
+/* =============================*/
 /* Welcome Screen */
 /* =============================*/
 #welcome-screen {

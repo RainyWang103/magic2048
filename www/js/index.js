@@ -62,6 +62,11 @@ bigMilestones.forEach((value) => {
 // ===========================================================================================
 // Elements
 // ===========================================================================================
+const passwordScreen = document.getElementById('password-screen');
+const passwordInput = document.getElementById('password-input');
+const passwordSubmit = document.getElementById('password-submit');
+const passwordError = document.getElementById('password-error');
+
 const welcomeScreen = document.getElementById('welcome-screen');
 const startButton = document.getElementById('start-button');
 
@@ -83,12 +88,33 @@ const gameOverElement = document.getElementById('game-over');
 
 window.addEventListener('keydown', handleKeyPress);
 
+// Password gate
+function checkPassword() {
+    if (passwordInput.value.toLowerCase() === 'gryffindor') {
+        passwordScreen.style.display = 'none';
+        welcomeScreen.style.display = 'block';
+    } else {
+        passwordError.style.display = 'block';
+        passwordInput.value = '';
+        passwordInput.focus();
+    }
+}
+passwordSubmit.addEventListener('click', checkPassword);
+passwordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') checkPassword(); });
+
+// Touch events: register via deviceready in Cordova, or immediately in a browser
 document.addEventListener("deviceready", onDeviceReady, false);
+if (!window.cordova) {
+    if (document.readyState === 'loading') {
+        document.addEventListener("DOMContentLoaded", onDeviceReady);
+    } else {
+        onDeviceReady();
+    }
+}
 function onDeviceReady() {
     gameContainer.addEventListener('touchstart', handleTouchStart, false);
     gameContainer.addEventListener('touchmove', handleTouchMove, false);
     gameContainer.addEventListener('touchend', handleTouchEnd, false);
-    // Now safe to use the Cordova API
 }
 
 startButton.addEventListener('click', () => {
@@ -442,4 +468,13 @@ function moveRight(newTiles) {
         }
     }
     return newTiles;
+}
+
+// ===========================================================================================
+// Service Worker Registration (PWA offline support)
+// ===========================================================================================
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js');
+    });
 }
