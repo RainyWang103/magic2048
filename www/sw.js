@@ -1,4 +1,4 @@
-const CACHE_NAME = 'magic2048-v2';
+const CACHE_NAME = 'magic2048-v3';
 
 const ASSETS = [
     './',
@@ -74,19 +74,18 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Stale-while-revalidate for JS and CSS — respond instantly from cache while
-    // refreshing the cached copy in the background so the next load is up to date.
+    // Network-first for JS and CSS — always fetch the latest code when online so
+    // any deploy is reflected immediately without bumping the SW cache version.
+    // Falls back to cache when offline.
     if (url.pathname.endsWith('.js') || url.pathname.endsWith('.css')) {
         event.respondWith(
-            caches.open(CACHE_NAME).then((cache) =>
-                cache.match(request).then((cached) => {
-                    const networkFetch = fetch(request).then((response) => {
-                        cache.put(request, response.clone());
-                        return response;
-                    });
-                    return cached || networkFetch;
+            fetch(request)
+                .then((response) => {
+                    const clone = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+                    return response;
                 })
-            )
+                .catch(() => caches.match(request))
         );
         return;
     }
