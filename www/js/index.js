@@ -20,7 +20,7 @@
 // ===========================================================================================
 // Version
 // ===========================================================================================
-const APP_VERSION = '1.0.3';
+const APP_VERSION = '1.0.4';
 document.getElementById('app-version').textContent = `v${APP_VERSION}`;
 
 // ===========================================================================================
@@ -127,17 +127,20 @@ function onDeviceReady() {
 startButton.addEventListener('click', () => {
     // Unlock every milestone audio element within this user-gesture context.
     // iOS Safari and some Android browsers require the very first play() on
-    // each HTMLAudioElement to be called synchronously inside a user-gesture
-    // handler; later programmatic calls are only allowed once the element has
-    // been "touched" this way.  We play each sound muted and immediately pause
-    // so nothing is audible — the unlock is the only goal here.
+    // each HTMLAudioElement to be called inside a user-gesture handler.
+    // We call play() then immediately pause() synchronously so the browser
+    // registers the unlock but never produces any audible output.
+    // volume is set to 0 as an extra guard; the expected AbortError from
+    // interrupting play() with pause() is silenced by .catch(() => {}).
     bigMilestones.forEach(value => {
         const audio = milestoneSound[value];
         if (audio) {
-            audio.muted = true;
-            audio.play()
-                .then(() => { audio.pause(); audio.currentTime = 0; audio.muted = false; })
-                .catch(() => { audio.muted = false; });
+            audio.volume = 0;
+            const p = audio.play();
+            audio.pause();
+            audio.currentTime = 0;
+            audio.volume = 1;
+            if (p !== undefined) p.catch(() => {});
         }
     });
     startButton.style.display = 'none';
@@ -186,7 +189,6 @@ function triggerTileEffect(value) {
             if(bigMilestones.includes(value)) {
                 const sound = milestoneSound[value];
                 if (sound) {
-                    sound.muted = false;
                     sound.currentTime = 0;
                     sound.play().catch(err => console.warn(`Milestone ${value} audio play failed:`, err));
                 }

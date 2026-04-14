@@ -1,10 +1,13 @@
+html {
+    background-color: #000; /* prevents white bleed-through when body opacity < 1 */
+}
 body {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     height: 100dvh; /* iOS dynamic viewport height (handles Safari address bar) */
-    background-color: #f0f0f0;
+    background-color: #000;
     margin: 0;
     font-family: 'Arial', sans-serif;
     overflow: hidden;
