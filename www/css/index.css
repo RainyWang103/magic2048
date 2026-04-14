@@ -1,12 +1,12 @@
-/* Background on html guarantees full rendering-surface coverage including
- * the iOS safe-area zone at the bottom where position:fixed elements can
- * fall short on some iPhone PWA configurations. */
+/* html has no background so the browser propagates body's background to the
+ * CSS canvas. The canvas covers the entire physical screen — including the
+ * home-indicator safe-area zone that can extend below the CSS viewport on
+ * modern iPhones (e.g. iPhone 17 Pro / iOS 26). When body's background is
+ * canvas-propagated, background-size is resolved against the initial
+ * containing block (full viewport) and painted on the infinite canvas,
+ * ensuring every pixel is covered regardless of safe-area-inset-bottom. */
 html {
-    background-color: #000; /* shown only if image fails to load */
-    background-image: url('../background-castle-black.png');
-    background-size: cover;
-    background-position: center;
-    min-height: 100%;
+    /* intentionally no background */
 }
 body {
     display: flex;
@@ -14,7 +14,10 @@ body {
     align-items: center;
     height: 100vh;
     height: 100dvh; /* iOS dynamic viewport height (handles Safari address bar) */
-    background-color: transparent;
+    background-color: #000; /* canvas fallback colour if image fails to load */
+    background-image: url('background-castle-black.png');
+    background-size: cover;
+    background-position: center;
     margin: 0;
     font-family: 'Arial', sans-serif;
     overflow: hidden;
