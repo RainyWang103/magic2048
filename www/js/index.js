@@ -20,7 +20,7 @@
 // ===========================================================================================
 // Version
 // ===========================================================================================
-const APP_VERSION = '1.1.1';
+const APP_VERSION = '1.2.0';
 document.getElementById('app-version').textContent = `v${APP_VERSION}`;
 
 // ===========================================================================================
@@ -66,6 +66,13 @@ smallMilestones.forEach((value) => {
 bigMilestones.forEach((value) => {
     milestoneSound[value] = document.getElementById(`milestone-sound-${value}`);
 });
+
+// Eagerly warm the browser's image cache so every tile and milestone image is
+// decoded before it is first needed — prevents blank-frame flashes on milestone.
+(function preloadGameImages() {
+    allTileValues.forEach(value => { new Image().src = imageMap[value]; });
+    smallMilestones.forEach(value => { new Image().src = milestoneImageMap[value]; });
+}());
 
 // ===========================================================================================
 // Elements
@@ -276,22 +283,40 @@ function renderTiles() {
 
             // Milestone: first time this value is reached
             const reachedMilestone = triggerTileEffect(tileObj.value);
-            let imageUrl;
             let shouldTriggerMilestoneImageSwap = false;
 
             if (reachedMilestone) {
-                tile.classList.add('milestone');
-                tile.style.animation = 'milestone 0.8s';
-                imageUrl = milestoneImageMap[tileObj.value];
                 shouldTriggerMilestoneImageSwap = true;
+                const milestoneUrl = milestoneImageMap[tileObj.value];
+                if (milestoneUrl) {
+                    const img = document.createElement('img');
+                    img.src = milestoneUrl;
+                    tile.appendChild(img);
+                    // Defer the scale animation until the image is decoded so the tile
+                    // never flashes blank before the milestone effect plays.
+                    const startAnim = () => {
+                        tile.classList.add('milestone');
+                        tile.style.animation = 'milestone 0.8s';
+                    };
+                    if (img.complete && img.naturalWidth > 0) {
+                        startAnim();
+                    } else if (typeof img.decode === 'function') {
+                        img.decode().then(startAnim).catch(startAnim);
+                    } else {
+                        img.addEventListener('load',  startAnim, { once: true });
+                        img.addEventListener('error', startAnim, { once: true });
+                    }
+                } else {
+                    tile.classList.add('milestone');
+                    tile.style.animation = 'milestone 0.8s';
+                }
             } else {
-                imageUrl = imageMap[tileObj.value];
-            }
-
-            if (imageUrl) {
-                const img = document.createElement('img');
-                img.src = imageUrl;
-                tile.appendChild(img);
+                const imageUrl = imageMap[tileObj.value];
+                if (imageUrl) {
+                    const img = document.createElement('img');
+                    img.src = imageUrl;
+                    tile.appendChild(img);
+                }
             }
 
             gameContainer.appendChild(tile);
