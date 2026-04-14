@@ -20,7 +20,7 @@
 // ===========================================================================================
 // Version
 // ===========================================================================================
-const APP_VERSION = '1.0.4';
+const APP_VERSION = '1.0.5';
 document.getElementById('app-version').textContent = `v${APP_VERSION}`;
 
 // ===========================================================================================
@@ -44,10 +44,6 @@ let reached = {};
 // ===========================================================================================
 // Assets Setup
 // ===========================================================================================
-document.body.style.backgroundImage = "url('background-castle-black.png')";
-document.body.style.backgroundSize = "cover";
-document.body.style.backgroundPosition = "center";
-document.body.style.opacity = "0.9"; // Set the opacity of the entire body
 // background Audio
 const backgroundMusic = document.getElementById('background-music');
 
