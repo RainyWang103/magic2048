@@ -11,6 +11,12 @@ html {
     background-size: cover;
     background-position: center;
     min-height: 100dvh;
+    /* Extend the element into the home-indicator safe-area zone so the
+     * background image covers it.  background-size:cover is relative to the
+     * element box, so making html taller than the CSS viewport by exactly
+     * env(safe-area-inset-bottom) stretches the image all the way to the
+     * physical bottom of the screen. */
+    min-height: calc(100dvh + env(safe-area-inset-bottom));
 }
 body {
     display: flex;
