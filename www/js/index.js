@@ -280,14 +280,17 @@ function initGame(mode) {
     const tileSize = computeTileSize(size);
     const gridDim = size * tileSize + (size - 1) * gap;
 
+    // containerSize = grid content (gridDim) + 15px padding on each side.
+    // box-sizing: border-box means width includes padding, so content area = containerSize - 30.
+    const containerSize = gridDim + 30;
     gameContainer.style.gridTemplateColumns = `repeat(${size}, ${tileSize}px)`;
     gameContainer.style.gridTemplateRows = `repeat(${size}, ${tileSize}px)`;
-    gameContainer.style.width = `${gridDim}px`;
-    gameContainer.style.height = `${gridDim}px`;
+    gameContainer.style.width = `${containerSize}px`;
+    gameContainer.style.height = `${containerSize}px`;
     // Scale tile font proportionally (tiles mostly show images; this is fallback text)
     gameContainer.style.setProperty('--tile-font-size', `${Math.floor(tileSize * 0.7)}px`);
-    // Align buttons to grid width (grid total visual width = gridDim + 30px container padding)
-    gameButtons.style.width = `${gridDim + 30}px`;
+    // Align buttons to container width
+    gameButtons.style.width = `${containerSize}px`;
 
     gameOverElement.style.display = 'none';
     successMessage.style.play = 'none';
