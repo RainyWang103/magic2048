@@ -181,12 +181,12 @@ body {
 }
 #game-container {
     display: grid;
-    grid-gap: 8px;
+    /* gap and padding are set dynamically by JS (getLayoutForSize) so they
+       scale with grid size: 4×4 uses 8 px, 5×5 uses 6 px, 6×6 uses 5 px. */
     /* Glassmorphism: frosted panel over the castle background */
     background: rgba(18, 22, 28, 0.55);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    padding: 8px;
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.07);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -290,7 +290,7 @@ body {
     color: #192432;
     font-size: var(--tile-font-size, 70px);
     font-weight: bold;
-    border-radius: 10px;
+    border-radius: var(--tile-border-radius, 10px);
     position: relative;
     overflow: hidden;
 }

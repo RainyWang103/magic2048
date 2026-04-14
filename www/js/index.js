@@ -20,7 +20,7 @@
 // ===========================================================================================
 // Version
 // ===========================================================================================
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.1.1';
 document.getElementById('app-version').textContent = `v${APP_VERSION}`;
 
 // ===========================================================================================
@@ -303,13 +303,22 @@ function renderTiles() {
     }
 }
 
+// Returns layout constants that scale down for larger grids so that gaps and
+// border-radii stay proportional to tile size, preserving the same visual feel
+// across 4×4, 5×5, and 6×6 modes.
+function getLayoutForSize(gridSize) {
+    if (gridSize <= 4) return { gap: 8, padding: 8, borderRadius: 10 };
+    if (gridSize === 5) return { gap: 6, padding: 6, borderRadius: 8 };
+    return                     { gap: 5, padding: 5, borderRadius: 6 }; // 6×6
+}
+
 // Compute the best tile size (px) to fit the grid on the current viewport.
 // Caps at 100 px on large screens; floors at 40 px on very small ones.
 function computeTileSize(gridSize) {
-    const gap             = 8;   // matches CSS grid-gap
-    const containerPad    = 16;  // 8 px each side
-    const screenPadding   = 40;
-    const buttonAreaHeight = 80;
+    const { gap, padding }  = getLayoutForSize(gridSize);
+    const containerPad      = padding * 2;
+    const screenPadding     = 40;
+    const buttonAreaHeight  = 80;
 
     const availableWidth  = window.innerWidth  - screenPadding - containerPad;
     const availableHeight = window.innerHeight - screenPadding - containerPad - buttonAreaHeight;
@@ -329,16 +338,19 @@ function initGame(mode) {
     nextTileId = 0;
     tiles = Array.from({ length: size }, () => Array(size).fill(null));
 
-    const gap           = 8;
+    const { gap, padding, borderRadius } = getLayoutForSize(size);
     const tileSize      = computeTileSize(size);
     const gridDim       = size * tileSize + (size - 1) * gap;
-    const containerSize = gridDim + 16; // 8 px padding each side
+    const containerSize = gridDim + padding * 2;
 
     gameContainer.style.gridTemplateColumns = `repeat(${size}, ${tileSize}px)`;
     gameContainer.style.gridTemplateRows    = `repeat(${size}, ${tileSize}px)`;
-    gameContainer.style.width  = `${containerSize}px`;
-    gameContainer.style.height = `${containerSize}px`;
-    gameContainer.style.setProperty('--tile-font-size', `${Math.floor(tileSize * 0.7)}px`);
+    gameContainer.style.width   = `${containerSize}px`;
+    gameContainer.style.height  = `${containerSize}px`;
+    gameContainer.style.gap     = `${gap}px`;
+    gameContainer.style.padding = `${padding}px`;
+    gameContainer.style.setProperty('--tile-font-size',      `${Math.floor(tileSize * 0.7)}px`);
+    gameContainer.style.setProperty('--tile-border-radius',  `${borderRadius}px`);
     gameButtons.style.width = `${containerSize}px`;
 
     gameOverElement.style.display  = 'none';
