@@ -15,7 +15,7 @@ body {
     height: 100vh;
     height: 100dvh; /* iOS dynamic viewport height (handles Safari address bar) */
     background-color: #000; /* canvas fallback colour if image fails to load */
-    background-image: url('background-castle-black.png');
+    background-image: url('../background-castle-black.png');
     background-size: cover;
     background-position: center;
     margin: 0;
