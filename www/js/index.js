@@ -77,6 +77,7 @@ const mode6 = document.getElementById('mode_6');
 
 const gameScreen = document.getElementById('game-screen');
 const gameContainer = document.getElementById('game-container');
+const gameButtons = document.getElementById('game-buttons');
 const backToSelect = document.getElementById('back-to-select');
 const restartButton = document.getElementById('restart-button');
 const successMessage = document.getElementById('success-message');
@@ -126,20 +127,19 @@ startButton.addEventListener('click', () => {
 });
 
 mode4.addEventListener('click', () => {
-    gameScreen.style.display = 'grid';
-
+    gameScreen.style.display = 'flex';
     gameSelectScreen.style.display = 'none';
     initGame(4);
 });
 
 mode5.addEventListener('click', () => {
-    gameScreen.style.display = 'grid';
+    gameScreen.style.display = 'flex';
     gameSelectScreen.style.display = 'none';
     initGame(5);
 });
 
 mode6.addEventListener('click', () => {
-    gameScreen.style.display = 'grid';
+    gameScreen.style.display = 'flex';
     gameSelectScreen.style.display = 'none';
     initGame(6);
 });
@@ -255,14 +255,40 @@ function renderTiles() {
     }
 }
 
+// Compute the best tile size (px) to fit the grid on the current viewport.
+// Caps at 100px on large screens; floors at 40px on very small ones.
+function computeTileSize(gridSize) {
+    const gap = 15;
+    const containerPadding = 30; // 15px each side of game-container
+    const screenPadding = 40;    // breathing room from screen edges
+    const buttonAreaHeight = 80; // approx height for buttons + gap below grid
+
+    const availableWidth = window.innerWidth - screenPadding - containerPadding;
+    const availableHeight = window.innerHeight - screenPadding - containerPadding - buttonAreaHeight;
+    const available = Math.min(availableWidth, availableHeight);
+
+    const tileSize = Math.floor((available - gap * (gridSize - 1)) / gridSize);
+    return Math.min(Math.max(tileSize, 40), 100);
+}
+
 function initGame(mode) {
     size = mode;
     reached = {};
     tiles = Array.from({ length: size }, () => Array(size).fill(null)); // two dimentional array
-    gameContainer.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-    gameContainer.style.gridTemplateRows = `repeat(${size}, 1fr)`;
-    gameContainer.style.width = `${size * 100 + (size - 1) * 15}px`;
-    gameContainer.style.height = `${size * 100 + (size - 1) * 15}px`;
+
+    const gap = 15;
+    const tileSize = computeTileSize(size);
+    const gridDim = size * tileSize + (size - 1) * gap;
+
+    gameContainer.style.gridTemplateColumns = `repeat(${size}, ${tileSize}px)`;
+    gameContainer.style.gridTemplateRows = `repeat(${size}, ${tileSize}px)`;
+    gameContainer.style.width = `${gridDim}px`;
+    gameContainer.style.height = `${gridDim}px`;
+    // Scale tile font proportionally (tiles mostly show images; this is fallback text)
+    gameContainer.style.setProperty('--tile-font-size', `${Math.floor(tileSize * 0.7)}px`);
+    // Align buttons to grid width (grid total visual width = gridDim + 30px container padding)
+    gameButtons.style.width = `${gridDim + 30}px`;
+
     gameOverElement.style.display = 'none';
     successMessage.style.play = 'none';
     addRandomTile();

@@ -3,15 +3,19 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    height: 100dvh; /* iOS dynamic viewport height (handles Safari address bar) */
     background-color: #f0f0f0;
     margin: 0;
-    font-family: 'Arial', sans-serif; 
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    box-sizing: border-box;
 }
 /* =============================*/
 /* Password Screen */
 /* =============================*/
 #password-screen {
-    width: 320px;
+    width: min(320px, 88vw);
     text-align: center;
     animation: fadeIn 1s forwards;
 }
@@ -64,13 +68,13 @@ body {
 /* Welcome Screen */
 /* =============================*/
 #welcome-screen {
-    width: 400px;
+    width: min(400px, 90vw);
     text-align: center;
 }
 #welcome-title {
     font-size: 25px;
     color: white;
-    margin-bottom: 100px;
+    margin-bottom: clamp(30px, 8vh, 100px);
     font-weight: bold;
 }
 #start-button {
@@ -90,14 +94,12 @@ body {
 /* Game Select Screen */
 /* =============================*/
 #game-select{
-    width: 300px;
+    width: min(300px, 88vw);
     text-align: center;
     animation: fadeIn 1s forwards;
 }
 #mode_4 {
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    width: 100%;
     padding: 10px 20px;
     font-size: 1.2em;
     font-weight: bold;
@@ -106,13 +108,10 @@ body {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    position: relative;
     height: 50px;
 }
 #mode_5 {
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    width: 100%;
     padding: 10px 20px;
     font-size: 1.2em;
     font-weight: bold;
@@ -121,15 +120,12 @@ body {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    position: relative;
     height: 50px;
     margin-top: 20px;
     margin-bottom:20px;
 }
 #mode_6 {
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    width: 100%;
     padding: 10px 20px;
     font-size: 1.2em;
     font-weight: bold;
@@ -138,7 +134,6 @@ body {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    position: relative;
     height: 50px;
 }
 /* =============================*/
@@ -146,6 +141,10 @@ body {
 /* =============================*/
 #game-screen {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
 }
 #game-container {
     display: grid;
@@ -158,36 +157,29 @@ body {
     animation: fadeIn 1s forwards;
 }
 #game-buttons {
-    margin-left: 62px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 #back-to-select {
-    transform: translateX(-50%);
     width: 120px;
     padding: 10px 20px;
-    font-size: 1.2em;
+    font-size: 1.1em;
     background-color: #47628f;
     color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    position: relative;
-    margin-top: 50px;
-    float: inline-start;
 }
 #restart-button {
-    transform: translateX(-50%);
     width: 120px;
     padding: 10px 20px;
-    font-size: 1.2em;
+    font-size: 1.1em;
     background-color: #47628f;
     color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    position: relative;
-    margin-top: 50px;
-    float: inline-end;
-    margin-right: -58px;
 }
 #success-message {
     position: absolute;
@@ -227,7 +219,7 @@ body {
     align-items: center;
     background-color: #ccc;
     color: #192432;
-    font-size: 70px;
+    font-size: var(--tile-font-size, 70px);
     font-weight: bold;
     border-radius: 5px;
     position: relative;
