@@ -20,7 +20,7 @@
 // ===========================================================================================
 // Version
 // ===========================================================================================
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.1';
 document.getElementById('app-version').textContent = `v${APP_VERSION}`;
 
 // ===========================================================================================
@@ -510,7 +510,15 @@ function moveRight(newTiles) {
 // ===========================================================================================
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js');
+        // updateViaCache: 'none' forces the browser to always fetch sw.js from the network,
+        // bypassing the HTTP cache. Without this, Safari can serve a stale sw.js for up to
+        // its cache TTL and never detect that a new version was deployed.
+        navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
+            .then((registration) => {
+                // Explicitly trigger an update check on every page load so new deployments
+                // are picked up immediately rather than waiting for the browser's own schedule.
+                registration.update();
+            });
     });
 
     // When a new service worker takes control (i.e. an update was deployed), reload the page
