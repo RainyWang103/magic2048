@@ -503,4 +503,14 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js');
     });
+
+    // When a new service worker takes control (i.e. an update was deployed), reload the page
+    // so the fresh HTML/JS/CSS is applied automatically — no manual cache clearing needed.
+    // The `hadController` guard skips the very first SW install so we don't reload on a
+    // brand-new visit.
+    const hadController = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!hadController) return;
+        window.location.reload();
+    });
 }
