@@ -51,6 +51,13 @@ body {
     width: min(320px, 88vw);
     text-align: center;
     animation: fadeIn 1s forwards;
+    background: rgba(18, 22, 28, 0.62);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    padding: 36px 28px 28px;
 }
 #password-title {
     font-size: 32px;
@@ -67,15 +74,22 @@ body {
     width: 100%;
     padding: 12px 16px;
     font-size: 1.1em;
-    border: none;
-    border-radius: 5px;
-    background-color: #47628f;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    background: rgba(71, 98, 143, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     color: #fff;
     box-sizing: border-box;
     margin-bottom: 12px;
     text-align: center;
     letter-spacing: 3px;
     outline: none;
+    transition: border-color 0.2s, background 0.2s;
+}
+#password-input:focus {
+    border-color: rgba(255, 255, 255, 0.28);
+    background: rgba(71, 98, 143, 0.50);
 }
 #password-input::placeholder {
     color: #9cb0b6;
@@ -85,11 +99,20 @@ body {
     width: 100%;
     padding: 12px;
     font-size: 1.1em;
-    background-color: #374e73;
+    background: rgba(55, 78, 115, 0.72);
     color: #fff;
-    border: none;
-    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
     cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: background 0.2s, transform 0.1s;
+}
+#password-submit:hover {
+    background: rgba(71, 98, 143, 0.85);
+}
+#password-submit:active {
+    transform: scale(0.97);
 }
 #password-error {
     margin-top: 14px;
@@ -103,6 +126,13 @@ body {
 #welcome-screen {
     width: min(400px, 90vw);
     text-align: center;
+    background: rgba(18, 22, 28, 0.55);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    padding: 40px 32px;
 }
 #welcome-title {
     font-size: 25px;
@@ -116,12 +146,18 @@ body {
     transform: translateX(-50%);
     padding: 10px 20px;
     font-size: 1.2em;
-    background-color: #374e73;
+    background: rgba(55, 78, 115, 0.72);
     color: #fff;
-    border: none;
-    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
     cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     animation: bounce 2s infinite;
+    transition: background 0.2s;
+}
+#start-button:hover {
+    background: rgba(71, 98, 143, 0.85);
 }
 /* =============================*/
 /* Game Select Screen */
@@ -130,44 +166,42 @@ body {
     width: min(300px, 88vw);
     text-align: center;
     animation: fadeIn 1s forwards;
+    background: rgba(18, 22, 28, 0.55);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    padding: 28px;
+    gap: 14px;
 }
-#mode_4 {
-    width: 100%;
-    padding: 10px 20px;
-    font-size: 1.2em;
-    font-weight: bold;
-    background-color: #374e73;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    height: 50px;
-}
-#mode_5 {
-    width: 100%;
-    padding: 10px 20px;
-    font-size: 1.2em;
-    font-weight: bold;
-    background-color: #374e73;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    height: 50px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
+#mode_4,
+#mode_5,
 #mode_6 {
     width: 100%;
     padding: 10px 20px;
     font-size: 1.2em;
     font-weight: bold;
-    background-color: #374e73;
+    background: rgba(55, 78, 115, 0.72);
     color: #fff;
-    border: none;
-    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
     cursor: pointer;
     height: 50px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: background 0.2s, transform 0.1s;
+    margin: 0;
+}
+#mode_4:hover,
+#mode_5:hover,
+#mode_6:hover {
+    background: rgba(71, 98, 143, 0.85);
+}
+#mode_4:active,
+#mode_5:active,
+#mode_6:active {
+    transform: scale(0.97);
 }
 /* =============================*/
 /* Game Screen */
@@ -199,25 +233,27 @@ body {
     justify-content: space-between;
     align-items: center;
 }
-#back-to-select {
-    width: 120px;
-    padding: 10px 20px;
-    font-size: 1.1em;
-    background-color: #47628f;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+#back-to-select,
 #restart-button {
     width: 120px;
     padding: 10px 20px;
     font-size: 1.1em;
-    background-color: #47628f;
+    background: rgba(71, 98, 143, 0.62);
     color: #fff;
-    border: none;
-    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
     cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: background 0.2s, transform 0.1s;
+}
+#back-to-select:hover,
+#restart-button:hover {
+    background: rgba(71, 98, 143, 0.85);
+}
+#back-to-select:active,
+#restart-button:active {
+    transform: scale(0.97);
 }
 #success-message {
     position: absolute;
