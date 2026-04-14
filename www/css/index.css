@@ -1,12 +1,22 @@
-/* html has no background so the browser propagates body's background to the
- * CSS canvas. The canvas covers the entire physical screen — including the
- * home-indicator safe-area zone that can extend below the CSS viewport on
- * modern iPhones (e.g. iPhone 17 Pro / iOS 26). When body's background is
- * canvas-propagated, background-size is resolved against the initial
- * containing block (full viewport) and painted on the infinite canvas,
- * ensuring every pixel is covered regardless of safe-area-inset-bottom. */
+/* Background on html rather than body. WebKit/iOS does not propagate body's
+ * background to the canvas when body has overflow:hidden — the image ends up
+ * painted nowhere and the screen is solid black.  Putting the background on
+ * html avoids that WebKit quirk entirely.  min-height:100dvh ensures the html
+ * element is at least as tall as the CSS viewport so background-size:cover
+ * fills the full visible area; any remaining gap in the home-indicator zone
+ * is covered by the matching background-color:#000 on the canvas. */
 html {
-    /* intentionally no background */
+    background-color: #000;
+    background-image: url('../background-castle-black.png');
+    background-size: cover;
+    background-position: center;
+    min-height: 100dvh;
+    /* Extend the element into the home-indicator safe-area zone so the
+     * background image covers it.  background-size:cover is relative to the
+     * element box, so making html taller than the CSS viewport by exactly
+     * env(safe-area-inset-bottom) stretches the image all the way to the
+     * physical bottom of the screen. */
+    min-height: calc(100dvh + env(safe-area-inset-bottom));
 }
 body {
     display: flex;
@@ -14,10 +24,7 @@ body {
     align-items: center;
     height: 100vh;
     height: 100dvh; /* iOS dynamic viewport height (handles Safari address bar) */
-    background-color: #000; /* canvas fallback colour if image fails to load */
-    background-image: url('../background-castle-black.png');
-    background-size: cover;
-    background-position: center;
+    background-color: transparent;
     margin: 0;
     font-family: 'Arial', sans-serif;
     overflow: hidden;
