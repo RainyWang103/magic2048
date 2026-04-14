@@ -191,14 +191,31 @@ App metadata lives in `config.xml`:
 
 ---
 
+## Versioning
+
+Every change — no matter how small — **must** include a version bump to `APP_VERSION` in `www/js/index.js`. This is the single source of truth; the version label on the home screen reads from it directly.
+
+Use **semantic versioning** (`MAJOR.MINOR.PATCH`). Determine the increment by the nature of the change:
+
+| Bump | When to use | Examples |
+|------|-------------|---------|
+| `PATCH` (x.x.**1**) | Bug fixes, copy/text tweaks, style corrections, performance improvements, internal refactors with no visible behaviour change | Fix tile overflow, fix layout bug, tweak font size, fix audio not playing |
+| `MINOR` (x.**1**.0) | New user-facing features that are backward-compatible | New grid mode, new milestone, new sound, new animation, new screen |
+| `MAJOR` (**2**.0.0) | Fundamental redesigns or breaking changes to how the game works | Complete UI overhaul, change to core game rules, password change |
+
+When in doubt, prefer `MINOR` over `PATCH` for anything the user will notice, and `PATCH` for anything purely internal.
+
+**Always bump the version as part of the same commit as the change** — never in a separate commit.
+
 ## Development Workflow
 
 There are no automated tests or a build system for the web code. Development cycle:
 
 1. Edit files in `www/`.
-2. Open `www/index.html` in a browser to test immediately.
-3. For mobile-specific behaviour (touch events, `deviceready`), use `cordova emulate android`.
-4. For iPhone PWA testing, deploy to GitHub Pages and open the URL in Safari on an iPhone.
+2. Bump `APP_VERSION` in `www/js/index.js` following the versioning rules above.
+3. Open `www/index.html` in a browser to test immediately.
+4. For mobile-specific behaviour (touch events, `deviceready`), use `cordova emulate android`.
+5. For iPhone PWA testing, deploy to GitHub Pages and open the URL in Safari on an iPhone.
 
 ### Known TODOs (from code comments)
 
