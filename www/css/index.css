@@ -1,5 +1,12 @@
+/* Background on html guarantees full rendering-surface coverage including
+ * the iOS safe-area zone at the bottom where position:fixed elements can
+ * fall short on some iPhone PWA configurations. */
 html {
-    background-color: #000; /* last-resort fallback behind everything */
+    background-color: #000; /* shown only if image fails to load */
+    background-image: url('../background-castle-black.png');
+    background-size: cover;
+    background-position: center;
+    min-height: 100%;
 }
 body {
     display: flex;
@@ -7,29 +14,12 @@ body {
     align-items: center;
     height: 100vh;
     height: 100dvh; /* iOS dynamic viewport height (handles Safari address bar) */
-    background-color: transparent; /* ::before supplies the background */
+    background-color: transparent;
     margin: 0;
     font-family: 'Arial', sans-serif;
     overflow: hidden;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     box-sizing: border-box;
-    isolation: isolate; /* creates stacking context so ::before z-index:-1 stays
-                           behind body children, not behind the html element */
-}
-/* Full-viewport background image.
- * position:fixed + inset:0 anchors this to the viewport rather than to the
- * body element, so it always covers the entire screen even if the body's
- * computed height falls short (an occasional iOS PWA / 100dvh quirk).
- * Opacity is applied here so only the background is dimmed, not the UI. */
-body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url('../background-castle-black.png');
-    background-size: cover;
-    background-position: center;
-    opacity: 0.9;
-    z-index: -1;
 }
 /* =============================*/
 /* Version Label */
