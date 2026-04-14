@@ -12,6 +12,19 @@ body {
     box-sizing: border-box;
 }
 /* =============================*/
+/* Version Label */
+/* =============================*/
+#app-version {
+    position: fixed;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    right: 14px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+    z-index: 100;
+    user-select: none;
+}
+/* =============================*/
 /* Password Screen */
 /* =============================*/
 #password-screen {
