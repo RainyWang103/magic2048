@@ -207,7 +207,7 @@ App metadata lives in `config.xml`:
 
 ## Versioning
 
-Every change — no matter how small — **must** include a version bump to `APP_VERSION` in `www/js/index.js`. This is the single source of truth; the version label on the home screen reads from it directly.
+`APP_VERSION` in `www/js/index.js` is the single source of truth; the version label on the home screen reads from it directly.
 
 Use **semantic versioning** (`MAJOR.MINOR.PATCH`). Determine the increment by the nature of the change:
 
@@ -219,14 +219,20 @@ Use **semantic versioning** (`MAJOR.MINOR.PATCH`). Determine the increment by th
 
 When in doubt, prefer `MINOR` over `PATCH` for anything the user will notice, and `PATCH` for anything purely internal.
 
-**Always bump the version as part of the same commit as the change** — never in a separate commit.
+### Per-branch versioning rule
+
+- **First commit on a branch**: bump `APP_VERSION` based on the nature of the change (PATCH / MINOR / MAJOR as above). Include the bump in the same commit as the change.
+- **Subsequent commits on the same branch**: re-evaluate the semantic level of the *entire branch* (all changes accumulated so far, not just the latest commit).
+  - If the level is unchanged (e.g., the branch is still a collection of bug fixes → still PATCH), keep the version set by the first commit — do **not** bump again.
+  - If the accumulated changes now warrant a higher level (e.g., what started as a PATCH fix grew to include a new user-visible feature → upgrade to MINOR), update `APP_VERSION` to reflect the new level in that commit.
+- Never downgrade the version mid-branch (e.g., do not go from MINOR back to PATCH).
 
 ## Development Workflow
 
 There are no automated tests or a build system for the web code. Development cycle:
 
 1. Edit files in `www/`.
-2. Bump `APP_VERSION` in `www/js/index.js` following the versioning rules above.
+2. On the **first commit of a branch**, bump `APP_VERSION` in `www/js/index.js` following the versioning rules above. On subsequent commits, re-evaluate the semantic level and only update the version if the level has changed (see **Per-branch versioning rule** above).
 3. Open `www/index.html` in a browser to test immediately.
 4. For mobile-specific behaviour (touch events, `deviceready`), use `cordova emulate android`.
 5. For iPhone PWA testing, deploy to GitHub Pages and open the URL in Safari on an iPhone.
