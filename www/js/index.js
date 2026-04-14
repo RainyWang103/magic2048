@@ -20,7 +20,7 @@
 // ===========================================================================================
 // Version
 // ===========================================================================================
-const APP_VERSION = '1.0.1';
+const APP_VERSION = '1.0.2';
 document.getElementById('app-version').textContent = `v${APP_VERSION}`;
 
 // ===========================================================================================
@@ -169,7 +169,11 @@ function triggerTileEffect(value) {
             console.log(`DEBUG: ${value} not reached yet, triggering effects`);
             reached[value] = true;
             if(bigMilestones.includes(value)) {
-                milestoneSound[value].play();
+                const sound = milestoneSound[value];
+                if (sound) {
+                    sound.currentTime = 0;
+                    sound.play().catch(err => console.warn(`Milestone ${value} audio play failed:`, err));
+                }
             }
             if(value === finalMilestone) {
                 gameWon = true;
