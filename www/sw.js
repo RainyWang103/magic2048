@@ -1,4 +1,4 @@
-const CACHE_NAME = 'magic2048-v1';
+const CACHE_NAME = 'magic2048-v2';
 
 const ASSETS = [
     './',
@@ -56,7 +56,43 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+    const { request } = event;
+    const url = new URL(request.url);
+
+    // Network-first for HTML navigation — always serve the freshest page when online,
+    // fall back to cache only when offline.
+    if (request.mode === 'navigate') {
+        event.respondWith(
+            fetch(request)
+                .then((response) => {
+                    const clone = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+                    return response;
+                })
+                .catch(() => caches.match(request))
+        );
+        return;
+    }
+
+    // Stale-while-revalidate for JS and CSS — respond instantly from cache while
+    // refreshing the cached copy in the background so the next load is up to date.
+    if (url.pathname.endsWith('.js') || url.pathname.endsWith('.css')) {
+        event.respondWith(
+            caches.open(CACHE_NAME).then((cache) =>
+                cache.match(request).then((cached) => {
+                    const networkFetch = fetch(request).then((response) => {
+                        cache.put(request, response.clone());
+                        return response;
+                    });
+                    return cached || networkFetch;
+                })
+            )
+        );
+        return;
+    }
+
+    // Cache-first for everything else (images, audio) — large assets that rarely change.
     event.respondWith(
-        caches.match(event.request).then((cached) => cached || fetch(event.request))
+        caches.match(request).then((cached) => cached || fetch(request))
     );
 });
