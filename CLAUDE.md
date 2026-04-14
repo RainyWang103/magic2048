@@ -141,7 +141,7 @@ The app is installable on iPhone via Safari → "Add to Home Screen":
 | File | Purpose |
 |------|---------|
 | `www/manifest.json` | PWA metadata: name, theme color, display `standalone`, portrait orientation |
-| `www/sw.js` | Service worker: caches all assets on install for offline play |
+| `www/sw.js` | Service worker: caches assets on install, network-first for HTML/JS/CSS |
 | `www/icons/icon-180.png` | Apple touch icon shown on iPhone home screen |
 | `www/icons/icon-192.png` | Chrome / Android PWA icon |
 | `www/icons/icon-512.png` | High-res maskable icon |
@@ -151,6 +151,20 @@ Relevant `<meta>` tags in `index.html`:
 - `apple-mobile-web-app-status-bar-style: black-translucent` — status bar overlays the content area
 - `viewport-fit=cover` — extends layout under the notch; combined with `env(safe-area-inset-*)` in CSS
 - `user-scalable=no` — prevents accidental pinch-zoom during gameplay
+
+---
+
+### Service Worker Update Behaviour
+
+The SW is registered with `{ updateViaCache: 'none' }` and `registration.update()` is called on every page load. This means the browser **always fetches `sw.js` fresh from the network** and detects any content change immediately — no HTTP caching delay.
+
+**Cache name (`CACHE_NAME` in `sw.js`) does NOT need to be bumped on routine changes.** When a new SW installs, `cache.addAll(ASSETS)` overwrites all cached entries with fresh copies regardless of the cache name. The name only matters for cleaning up orphaned entries.
+
+| Change type | Action required |
+|---|---|
+| HTML / JS / CSS change | Bump `APP_VERSION` only — no `sw.js` change needed (those files are network-first) |
+| Adding a new image or audio asset | Add entry to `ASSETS` in `sw.js` + bump `APP_VERSION` (the `sw.js` content change triggers reinstall automatically) |
+| Removing an asset | Remove from `ASSETS`, bump `CACHE_NAME` (e.g. `v4` → `v5`) to purge the orphaned cache entry, bump `APP_VERSION` |
 
 ---
 
