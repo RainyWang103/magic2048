@@ -20,7 +20,7 @@
 // ===========================================================================================
 // Version
 // ===========================================================================================
-const APP_VERSION = '1.0.2';
+const APP_VERSION = '1.0.3';
 document.getElementById('app-version').textContent = `v${APP_VERSION}`;
 
 // ===========================================================================================
@@ -125,6 +125,21 @@ function onDeviceReady() {
 }
 
 startButton.addEventListener('click', () => {
+    // Unlock every milestone audio element within this user-gesture context.
+    // iOS Safari and some Android browsers require the very first play() on
+    // each HTMLAudioElement to be called synchronously inside a user-gesture
+    // handler; later programmatic calls are only allowed once the element has
+    // been "touched" this way.  We play each sound muted and immediately pause
+    // so nothing is audible — the unlock is the only goal here.
+    bigMilestones.forEach(value => {
+        const audio = milestoneSound[value];
+        if (audio) {
+            audio.muted = true;
+            audio.play()
+                .then(() => { audio.pause(); audio.currentTime = 0; audio.muted = false; })
+                .catch(() => { audio.muted = false; });
+        }
+    });
     startButton.style.display = 'none';
     welcomeScreen.style.display = 'none';
     gameSelectScreen.style.display = 'grid';
@@ -171,6 +186,7 @@ function triggerTileEffect(value) {
             if(bigMilestones.includes(value)) {
                 const sound = milestoneSound[value];
                 if (sound) {
+                    sound.muted = false;
                     sound.currentTime = 0;
                     sound.play().catch(err => console.warn(`Milestone ${value} audio play failed:`, err));
                 }

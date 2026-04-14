@@ -55,9 +55,61 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
 });
 
+// Handle HTTP range requests against a cached full response.
+// Browsers send Range requests when buffering / seeking audio or video.
+// The Cache API stores full 200 OK responses; returning one to a Range
+// request gives the browser a 200 instead of the expected 206 Partial
+// Content, which causes audio playback to silently fail.  We slice the
+// cached buffer here and return a proper 206 response instead.
+async function handleRangeRequest(request) {
+    const cache = await caches.open(CACHE_NAME);
+    // Look up by plain URL so the Range header does not prevent a cache hit.
+    const cachedFull = await cache.match(new Request(request.url));
+    if (!cachedFull) {
+        // Not cached — let the network respond (it supports range natively).
+        return fetch(request);
+    }
+
+    const rangeHeader = request.headers.get('range');
+    const arrayBuffer = await cachedFull.arrayBuffer();
+    const total = arrayBuffer.byteLength;
+
+    const match = rangeHeader && rangeHeader.match(/bytes=(\d+)-(\d*)/);
+    if (!match) {
+        // Malformed or missing Range header — return the full file.
+        return new Response(arrayBuffer, {
+            status: 200,
+            headers: { 'Content-Type': cachedFull.headers.get('Content-Type') || 'audio/mpeg' },
+        });
+    }
+
+    const start = parseInt(match[1], 10);
+    const end = match[2] ? parseInt(match[2], 10) : total - 1;
+    const chunk = arrayBuffer.slice(start, end + 1);
+
+    return new Response(chunk, {
+        status: 206,
+        statusText: 'Partial Content',
+        headers: {
+            'Content-Range': `bytes ${start}-${end}/${total}`,
+            'Content-Length': String(end - start + 1),
+            'Content-Type': cachedFull.headers.get('Content-Type') || 'audio/mpeg',
+            'Accept-Ranges': 'bytes',
+        },
+    });
+}
+
 self.addEventListener('fetch', (event) => {
     const { request } = event;
     const url = new URL(request.url);
+
+    // Range requests must be answered with 206 Partial Content.
+    // Intercept them before the generic cache-first handler so audio
+    // files served from cache work correctly in all browsers.
+    if (request.headers.get('range')) {
+        event.respondWith(handleRangeRequest(request));
+        return;
+    }
 
     // Network-first for HTML navigation — always serve the freshest page when online,
     // fall back to cache only when offline.
